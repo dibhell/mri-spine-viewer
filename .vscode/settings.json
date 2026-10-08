@@ -1,0 +1,13 @@
+{
+  "files.watcherExclude": {
+    "**/.git/objects/**": true,
+    "**/.git/subtree-cache/**": true,
+    "**/.venv-seg/**": true,
+    "**/20261006/**": true
+  },
+  "search.exclude": {
+    "**/.venv-seg": true,
+    "**/20261006": true
+  },
+  "git.ignoreLimitWarning": true
+}
