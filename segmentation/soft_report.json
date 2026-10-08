@@ -1,0 +1,30 @@
+{
+  "totalsegmentator_version": "2.18.0",
+  "nnunetv2_version": "2.8.1",
+  "torch_version": "2.14.1+cpu",
+  "task": "total_mr",
+  "modality": "MR",
+  "license_required": false,
+  "device": "cpu",
+  "fast": false,
+  "fastest": false,
+  "save_lowres": false,
+  "multilabel": false,
+  "output_type": "nifti",
+  "roi_subset": [
+    "intervertebral_discs",
+    "spinal_cord"
+  ],
+  "input": "C:\\Users\\Piotrek\\MRI\\segmentation\\series401.nii.gz",
+  "output": "C:\\Users\\Piotrek\\MRI\\segmentation\\soft",
+  "num_classes": 2,
+  "classes": {
+    "20": "intervertebral_discs",
+    "21": "spinal_cord"
+  },
+  "runtime_seconds": 80.11,
+  "output_files": [
+    "intervertebral_discs.nii.gz",
+    "spinal_cord.nii.gz"
+  ]
+}

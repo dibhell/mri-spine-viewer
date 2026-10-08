@@ -1,0 +1,15 @@
+# Python Virtual Environment & Cache
+.venv-seg/
+venv/
+__pycache__/
+*.pyc
+
+# Raw DICOM data (protected medical files)
+20261006/
+DICOMDIR
+*.dcm
+
+# Temp files
+scratch/
+*.tmp
+*.log

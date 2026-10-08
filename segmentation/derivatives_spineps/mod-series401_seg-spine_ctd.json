@@ -1,0 +1,148 @@
+[
+    {
+        "direction": [
+            "P",
+            "I",
+            "R"
+        ],
+        "zoom": [
+            0.3819444,
+            0.3819445,
+            3.3
+        ],
+        "origin": [
+            29.1301098,
+            96.4622574,
+            170.2445221
+        ],
+        "rotation": [
+            [
+                1.658222661958315e-08,
+                -0.050741977894543905,
+                0.9987118171736951
+            ],
+            [
+                -1.0000001560558203,
+                -3.267948282327361e-07,
+                1.6217552285885344e-15
+            ],
+            [
+                3.263739374719074e-07,
+                -0.9987116815781858,
+                -0.05074198572190582
+            ]
+        ],
+        "shape": [
+            576,
+            576,
+            15
+        ],
+        "format": "POI",
+        "level_one_info": "Any",
+        "level_two_info": "Any",
+        "source": "MRI Segmentation Pipeline",
+        "version": "2.1.2",
+        "models": {
+            "0": {
+                "name": "164_T2w_sag_2.0",
+                "model_path": "C:\\Users\\Piotrek\\MRI\\.venv-seg\\Lib\\site-packages\\spineps\\models\\T2w_semantic_v1.0.9",
+                "modality": "[Modality.T2w]",
+                "aquisition": "Acquisition.sag",
+                "resolution_range": "[0.75, 0.75, 1.65]"
+            },
+            "1": {
+                "name": "Instance_Vertebra_4.0",
+                "model_path": "C:\\Users\\Piotrek\\MRI\\.venv-seg\\Lib\\site-packages\\spineps\\models\\instance_sagittal_v1.2.0",
+                "modality": "[Modality.SEG]",
+                "aquisition": "Acquisition.sag",
+                "resolution_range": "[0.75, 0.75, 1.65]"
+            },
+            "2": {
+                "name": "T2w_Labeling_v1.0",
+                "model_path": "C:\\Users\\Piotrek\\MRI\\.venv-seg\\Lib\\site-packages\\spineps\\models\\T2w_labeling_v1.4.0",
+                "modality": "[Modality.T2w]",
+                "aquisition": "Acquisition.sag",
+                "resolution_range": "[0.8571, 0.8571, 3.3]"
+            }
+        },
+        "timestamp": "date-2026-10-7_time-11-30-39",
+        "proc_pad_size": "4",
+        "proc_normalize_input": "True",
+        "proc_sem_crop_input": "True",
+        "proc_sem_n4_bias_correction": "True",
+        "proc_sem_remove_inferior_beyond_canal": "False",
+        "proc_sem_clean_beyond_largest_bounding_box": "True",
+        "proc_sem_clean_small_cc_artifacts": "True",
+        "proc_sem_step_size": "None",
+        "proc_inst_corpus_clean": "True",
+        "proc_inst_clean_small_cc_artifacts": "True",
+        "proc_inst_largest_k_cc": "0",
+        "proc_inst_detect_and_solve_merged_corpi": "True",
+        "proc_inst_batch_size": "4",
+        "proc_inst_amp": "False",
+        "proc_lab_force_no_tl_anomaly": "False",
+        "proc_fill_3d_holes": "True",
+        "proc_assign_missing_cc": "True",
+        "proc_assign_missing_cc_fast": "False",
+        "proc_clean_inst_by_sem": "True",
+        "proc_vertebra_inconsistency": "True"
+    },
+    {
+        "2": {
+            "50": [
+                263.0800339,
+                235.5099385,
+                7.3300011
+            ]
+        },
+        "3": {
+            "50": [
+                274.4800324,
+                293.4399193,
+                7.0500014
+            ]
+        },
+        "4": {
+            "50": [
+                282.4500307,
+                341.1499037,
+                7.1300016
+            ]
+        },
+        "5": {
+            "50": [
+                292.7500296,
+                387.7198886,
+                7.3000019
+            ]
+        },
+        "6": {
+            "50": [
+                302.5400285,
+                432.4098741,
+                7.2200021
+            ]
+        },
+        "7": {
+            "50": [
+                314.2500279,
+                476.5698599,
+                7.2900023
+            ]
+        },
+        "8": {
+            "50": [
+                333.5000283,
+                525.0498448,
+                7.4100026
+            ]
+        },
+        "9": {
+            "50": [
+                353.0400294,
+                565.0898325,
+                7.3000027
+            ]
+        }
+    }
+]

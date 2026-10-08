@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="pl"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MRI odcinka szyjnego — przeglądarka lokalna</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23080b12'/%3E%3Cpath d='M16 5c-4 0-7 3-7 7v8c0 4 3 7 7 7s7-3 7-7v-8c0-4-3-7-7-7Z' fill='none' stroke='%2367e8f9' stroke-width='2'/%3E%3C/svg%3E">
+<style>
+:root{color-scheme:dark;font-family:Inter,system-ui,sans-serif;background:#080b12;color:#e5edf5}*{box-sizing:border-box}body{margin:0;height:100vh;overflow:hidden}main{height:100%;display:grid;grid-template-columns:minmax(250px,310px) 1fr}aside{padding:22px;background:#0d121c;border-right:1px solid #263244;overflow:auto}h1{margin:0 0 4px;font-size:1.15rem}.subtle,.meta{color:#94a3b8;font-size:.82rem;line-height:1.45}.tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:22px;padding:4px;background:#080b12;border-radius:10px}.tabs button{margin:0;border-color:transparent;background:transparent}.tabs button.active{color:#081018;background:#67e8f9}label{display:block;margin-top:20px;color:#cbd5e1;font-size:.88rem}select,input[type=range]{width:100%;margin-top:8px}select{padding:10px;color:inherit;background:#141b28;border:1px solid #334155;border-radius:8px}input[type=range]{accent-color:#67e8f9}.value{float:right;color:#67e8f9;font-variant-numeric:tabular-nums}.check{display:flex;align-items:center;gap:8px}button{width:100%;margin-top:18px;padding:10px;color:inherit;background:#182232;border:1px solid #334155;border-radius:8px;cursor:pointer}button:hover{background:#202d40}.surface{min-width:0;min-height:0;height:100%;background:#030508}.viewer2d{display:grid;grid-template-rows:1fr auto}.stage{min-height:0;display:grid;place-items:center;overflow:hidden;position:relative;cursor:grab;touch-action:none}.stage.dragging{cursor:grabbing}#image,#enhancedImage{position:absolute;left:50%;top:50%;max-width:100%;max-height:100%;object-fit:contain;user-select:none;pointer-events:none;transform-origin:center}#enhancedImage{opacity:.7}.slice{padding:14px 24px 18px;background:#080b12;border-top:1px solid #1e293b}.slice-row{display:flex;justify-content:space-between;gap:16px;color:#cbd5e1;font-size:.88rem}.keys{color:#64748b}.viewer3d{display:none;position:relative;overflow:hidden}#volume{width:100%;height:100%;display:block;cursor:grab}.hint3d{position:absolute;left:22px;bottom:18px;padding:8px 11px;color:#94a3b8;background:#080b12c7;border:1px solid #263244;border-radius:8px;font-size:.8rem;pointer-events:none}.loading{position:absolute;inset:0;display:grid;place-items:center;color:#94a3b8;pointer-events:none}.hidden{display:none!important}
+.vertebra-labels{position:absolute;left:50%;top:50%;width:576px;height:576px;max-width:100%;max-height:100%;pointer-events:none;transform-origin:center;overflow:visible}.vertebra-labels line{stroke:#67e8f9;stroke-width:.45}.vertebra-labels circle{fill:#07111b;stroke:#67e8f9;stroke-width:.55}.vertebra-labels text{fill:#fff;font-size:3.2px;font-weight:700;text-anchor:middle;dominant-baseline:central;paint-order:stroke;stroke:#07111b;stroke-width:.7px}
+.view-buttons{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:12px}.view-buttons button{margin:0;padding:8px 4px;font-size:.8rem}.tabs{grid-template-columns:repeat(3,1fr)}.tabs button{font-size:.78rem;padding:9px 3px}
+#volumeOld{width:100%;height:100%;display:block;cursor:grab;touch-action:none}#volumeOld:active{cursor:grabbing}#labels3d{position:absolute;inset:0;pointer-events:none}
+.scan-inset{position:absolute;right:18px;bottom:18px;width:min(31vw,400px);max-height:calc(100% - 36px);overflow:auto;padding:10px;background:#0d121cee;border:1px solid #334155;border-radius:10px;box-shadow:0 12px 32px #0008}.scan-inset summary{cursor:pointer;font-size:.82rem;color:#cbd5e1}.scan-inset img{display:block;width:100%;height:auto;margin-top:8px}.scan-inset input{margin-top:6px}.scan-inset small{color:#94a3b8}.scan-inset button{margin-top:8px}
+.mesh-label{position:absolute;padding:3px 6px;transform:translate(-50%,-50%);color:#07111b;background:#eaf5ff;border:1px solid #67e8f9;border-radius:5px;font-size:.72rem;font-weight:800;pointer-events:none}.legend{display:flex;gap:12px;margin-top:16px;color:#94a3b8;font-size:.78rem}.legend i{display:inline-block;width:10px;height:10px;margin-right:5px;border-radius:50%}
+@media(max-width:720px){body{height:auto;min-height:100vh;overflow:auto}main{min-height:100vh;grid-template-columns:1fr;grid-template-rows:auto minmax(65vh,1fr)}aside{border-right:0;border-bottom:1px solid #263244}.keys{display:none}}
+.locked{display:none!important}
+.auth-gate{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;background:radial-gradient(circle at 50% 40%,#0c1422 0%,#04070d 100%);backdrop-filter:blur(24px);padding:20px}
+.auth-card{width:100%;max-width:370px;background:rgba(13,18,28,.88);border:1px solid rgba(103,232,249,.25);box-shadow:0 25px 60px rgba(0,0,0,.75),0 0 35px rgba(103,232,249,.1);border-radius:18px;padding:34px 28px;text-align:center;backdrop-filter:blur(16px);animation:authPop .35s cubic-bezier(.16,1,.3,1)}
+@keyframes authPop{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+.auth-icon{width:54px;height:54px;margin:0 auto 16px;display:grid;place-items:center;border-radius:14px;background:rgba(103,232,249,.1);border:1px solid rgba(103,232,249,.3);color:#67e8f9;box-shadow:0 0 20px rgba(103,232,249,.2)}
+.auth-icon svg{width:26px;height:26px}
+.auth-card h2{margin:0 0 6px;font-size:1.3rem;font-weight:700;color:#f8fafc;letter-spacing:-.01em}
+.auth-sub{margin:0 0 22px;font-size:.84rem;color:#94a3b8;line-height:1.45}
+.auth-form{display:flex;flex-direction:column;gap:12px}
+.auth-input-wrap input{width:100%;padding:12px 14px;background:#141b28;border:1px solid #334155;border-radius:9px;color:#f8fafc;font-size:1rem;text-align:center;letter-spacing:.12em;transition:border-color .2s,box-shadow .2s}
+.auth-input-wrap input:focus{outline:none;border-color:#67e8f9;box-shadow:0 0 0 3px rgba(103,232,249,.25);background:#182234}
+.auth-input-wrap input.error{border-color:#ef4444;box-shadow:0 0 0 3px rgba(239,68,68,.25);animation:authShake .35s ease}
+@keyframes authShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.auth-form button{width:100%;padding:11px;margin:0;background:linear-gradient(135deg,#0ea5e9 0%,#06b6d4 100%);color:#041019;font-weight:700;font-size:.92rem;border:none;border-radius:9px;cursor:pointer;transition:transform .15s,box-shadow .2s;box-shadow:0 4px 14px rgba(6,182,212,.35)}
+.auth-form button:hover{background:linear-gradient(135deg,#38bdf8 0%,#22d3ee 100%);box-shadow:0 6px 20px rgba(6,182,212,.5);transform:translateY(-1px)}
+.auth-error{font-size:.82rem;color:#f87171;margin-top:2px}
+</style>
+<script type="importmap">{"imports":{"three":"./vendor/three.module.js"}}</script>
+</head><body>
+<div id="authGate" class="auth-gate">
+  <div class="auth-card">
+    <div class="auth-icon">
+      <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="5" y="11" width="22" height="16" rx="3"/>
+        <path d="M10 11V7a6 6 0 0 1 12 0v4"/>
+        <circle cx="16" cy="19" r="2" fill="currentColor"/>
+      </svg>
+    </div>
+    <h2>Dostęp autoryzowany</h2>
+    <p class="auth-sub">Badanie MRI odcinka szyjnego<br>Podaj hasło, aby odblokować badanie</p>
+    <form id="authForm" class="auth-form" autocomplete="off">
+      <div class="auth-input-wrap">
+        <input id="authPassword" type="password" placeholder="Hasło dostępu" autofocus autocomplete="current-password" required>
+      </div>
+      <button id="authSubmit" type="submit">Odblokuj badanie</button>
+      <div id="authError" class="auth-error hidden">Nieprawidłowe hasło dostępu</div>
+    </form>
+  </div>
+</div>
+<main id="appMain" class="locked">
+<aside>
+<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+  <div><h1>MRI odcinka szyjnego</h1><div class="subtle">Lokalna przeglądarka badania z 06.10.2026</div></div>
+  <button id="lockBtn" type="button" title="Zablokuj badanie" style="width:auto;margin:0;padding:5px 9px;font-size:.74rem;background:#141b28;border:1px solid #334155;color:#94a3b8;border-radius:6px;cursor:pointer">🔒 Zablokuj</button>
+</div>
+<div class="tabs" role="tablist" aria-label="Tryb widoku"><button id="tab2d" class="active" type="button" role="tab">Przekroje 2D</button><button id="tab3d" type="button" role="tab">Model 3D</button><button id="tabVolume" type="button" role="tab">Objętość 3D</button></div>
+<div id="controls2d">
+<label for="series">Seria</label><select id="series"></select><p class="meta" id="meta"></p>
+<label for="brightness">Jasność <span class="value" id="brightnessValue">100%</span></label><input id="brightness" type="range" min="40" max="200" value="100">
+<label for="contrast">Kontrast <span class="value" id="contrastValue">100%</span></label><input id="contrast" type="range" min="40" max="300" value="100">
+<label for="structure">Wzmocnienie struktur <span class="value" id="structureValue">70%</span></label><input id="structure" type="range" min="0" max="100" value="70">
+<label class="check"><input id="showLabels" type="checkbox" checked> Numery kręgów C2–C7</label>
+<label for="labelOffset">Korekta numeracji <span class="value" id="labelOffsetValue">0</span></label><input id="labelOffset" type="range" min="-12" max="12" step="0.5" value="0">
+<label for="zoom">Powiększenie <span class="value" id="zoomValue">100%</span></label><input id="zoom" type="range" min="50" max="800" step="10" value="100">
+<label class="check"><input id="invert" type="checkbox"> Odwróć czerń i biel</label><button id="reset2d" type="button">Reset widoku 2D</button></div>
+<div id="controls3d" class="hidden"><p class="meta">Seria 401 · T2 strzałkowa · kręgi C1–T1</p>
+<label for="meshVariant">Obrys modelu</label><select id="meshVariant"><option value="detail" selected>Szczegółowe krążki i kanał</option><option value="smooth">Gładki model poprzedni</option></select>
+<div class="view-buttons"><button type="button" data-view="side">Bok</button><button type="button" data-view="front">Przód</button><button type="button" data-view="top">Góra</button></div>
+<label class="check"><input id="autoRotate" type="checkbox"> Obrót automatyczny</label>
+<label class="check"><input id="showBones" type="checkbox" checked> Kręgi</label>
+<label class="check"><input id="showDiscs" type="checkbox" checked> Krążki międzykręgowe</label>
+<label class="check"><input id="showOutlines" type="checkbox" checked> Obrysy kręgów i krążków</label>
+<label class="check"><input id="showCord" type="checkbox" checked> Rdzeń kręgowy</label>
+<label class="check"><input id="showCanal" type="checkbox"> Kanał kręgowy</label>
+<label class="check"><input id="showRoots" type="checkbox" checked> Korzenie C3–C8 · schemat</label>
+<label class="check"><input id="show3dLabels" type="checkbox" checked> Numery kręgów</label>
+<label class="check"><input id="showScanInset" type="checkbox" checked> Pokaż obraz MRI obok modelu</label>
+<label for="renderQuality">Wygładzanie krawędzi 3D</label><select id="renderQuality"><option value="1">Standardowe</option><option value="1.5">Podwyższone</option><option value="2" selected>Wysokie · do 2×</option></select>
+<label for="meshOpacity">Krycie kręgów <span class="value" id="meshOpacityValue">100%</span></label><input id="meshOpacity" type="range" min="20" max="100" value="100">
+<div class="legend"><span><i style="background:#f1e4c8"></i>kręgi</span><span><i style="background:#39d9ea"></i>krążki</span><span><i style="background:#ef5b67"></i>rdzeń</span><span><i style="background:#ffd36e"></i>korzenie (schemat)</span></div>
+<button id="reset3d" type="button">Ustaw widok kręgosłupa</button></div>
+<div id="controlsVolume" class="hidden"><p class="meta">Objętość MRI z przekrojów · seria 401 T2</p>
+<div class="view-buttons"><button type="button" data-volume-view="side">Bok</button><button type="button" data-volume-view="front">Przód</button><button type="button" data-volume-view="top">Góra</button></div>
+<label class="check"><input id="showMriPlane" type="checkbox"> Pokaż pojedynczy przekrój MRI</label>
+<label for="volumeSlice">Warstwa <span class="value" id="volumeSliceValue">10 z 15</span></label><input id="volumeSlice" type="range" min="1" max="15" value="10">
+<label class="check"><input id="volumeAutoRotate" type="checkbox"> Obrót automatyczny</label>
+<div id="volumeRenderingControls">
+<label class="check"><input id="isolateSpine" type="checkbox" checked> Usuń tkanki obwodowe</label>
+<label class="check"><input id="showVolumeOutlines" type="checkbox" checked> Obrysy kręgów i krążków (model 3D AA)</label>
+<label for="volumeModelIntensity">Intensywność / zanikanie modelu 3D <span class="value" id="volumeModelIntensityValue">80%</span></label><input id="volumeModelIntensity" type="range" min="0" max="100" value="80">
+<label for="volumeMeshOpacity">Wypełnienie brył 3D <span class="value" id="volumeMeshOpacityValue">15%</span></label><input id="volumeMeshOpacity" type="range" min="0" max="60" value="15">
+<label for="crop">Pole wokół kręgosłupa <span class="value" id="cropValue">45%</span></label><input id="crop" type="range" min="45" max="150" value="45">
+<label for="threshold">Próg tkanek <span class="value" id="thresholdValue">18%</span></label><input id="threshold" type="range" min="0" max="80" value="18">
+<label for="density">Tkanki miękkie <span class="value" id="densityValue">100%</span></label><input id="density" type="range" min="0" max="200" value="100">
+<label for="bone">Kontrast granic kręgów i krążków <span class="value" id="boneValue">140%</span></label><input id="bone" type="range" min="0" max="250" value="140">
+</div>
+<button id="resetVolume" type="button">Reset widoku objętościowego</button></div></aside>
+<section id="viewer2d" class="surface viewer2d"><div class="stage"><img id="image" alt="Przekrój MRI odcinka szyjnego"><img id="enhancedImage" alt=""><svg id="vertebraLabels" class="vertebra-labels" viewBox="0 0 100 100" aria-label="Numery kręgów szyjnych"><g id="vertebraLabelGroup"><line x1="45" y1="39" x2="50" y2="39"/><circle cx="42" cy="39" r="2.7"/><text x="42" y="39">C2</text><line x1="45" y1="49" x2="51" y2="49"/><circle cx="42" cy="49" r="2.7"/><text x="42" y="49">C3</text><line x1="45" y1="59" x2="52" y2="59"/><circle cx="42" cy="59" r="2.7"/><text x="42" y="59">C4</text><line x1="45" y1="68" x2="53" y2="68"/><circle cx="42" cy="68" r="2.7"/><text x="42" y="68">C5</text><line x1="45" y1="78" x2="54" y2="78"/><circle cx="42" cy="78" r="2.7"/><text x="42" y="78">C6</text><line x1="45" y1="88" x2="55" y2="88"/><circle cx="42" cy="88" r="2.7"/><text x="42" y="88">C7</text></g></svg></div><div class="slice"><div class="slice-row"><span id="sliceText"></span><span class="keys">← → warstwy · kółko zoom · przeciągnij obraz</span></div><input id="slice" type="range" min="0" max="0" value="0" aria-label="Numer warstwy"></div></section>
+<section id="viewer3d" class="surface viewer3d"><canvas id="volume" aria-label="Interaktywny model kręgosłupa szyjnego 3D"></canvas><div id="labels3d"></div><div id="loading3d" class="loading">Ładowanie segmentacji C1–C7…</div><details id="scanInset" class="scan-inset" open><summary>Źródłowy obraz T2 · <span id="previewNumber">warstwa 10/15</span></summary><img id="sagittalPreview" alt="Źródłowy przekrój MRI T2"><input id="previewSlice" type="range" min="1" max="15" value="10" aria-label="Warstwa źródłowego obrazu T2"><button id="openPreview2d" type="button">Powiększ tę warstwę w 2D</button></details><div class="hint3d">Lewy przycisk: obrót · kółko: zoom · prawy: przesunięcie</div></section>
+<section id="viewerVolume" class="surface viewer3d"><canvas id="volumeOld" aria-label="Podgląd objętościowy MRI 3D"></canvas><div id="loadingVolume" class="loading">Ładowanie objętości 3D…</div><div class="hint3d">Przeciągnij w dowolnym kierunku: obrót · kółko: zoom · prawy: przesunięcie</div></section>
+</main><script src="data.js"></script><script>
+const $=id=>document.getElementById(id),stage=document.querySelector('.stage'),controls=['brightness','contrast','zoom'];let current=0,panX=0,panY=0,drag=null,moveFrame=0;
+function renderSeries(index){current=Number(index);const item=MRI_SERIES[current];$('slice').max=item.count-1;$('slice').value=Math.floor((item.count-1)/2);$('meta').textContent=`${item.plane} · ${item.dimensions[0]}×${item.dimensions[1]} px · warstwa ${item.sliceThickness||'?'} mm`;panX=panY=0;$('zoom').value=100;renderImage();renderFilters();updateLabels()}
+function renderImage(){const item=MRI_SERIES[current],index=Number($('slice').value);$('image').src=item.files[index];$('enhancedImage').src=item.enhancedFiles[index];$('sliceText').textContent=`Warstwa ${index+1} z ${item.count}`}
+function renderFilters(){const invert=$('invert').checked?' invert(1)':'',transform=`translate(-50%,-50%) translate(${panX}px,${panY}px) scale(${$('zoom').value/100})`;for(const id of ['image','enhancedImage']){$(id).style.filter=`brightness(${$('brightness').value}%) contrast(${$('contrast').value}%)${invert}`;$(id).style.transform=transform}$('vertebraLabels').style.transform=transform;$('enhancedImage').style.opacity=$('structure').value/100;$('structureValue').textContent=$('structure').value+'%';controls.forEach(id=>$(id+'Value').textContent=$(id).value+'%')}
+function updateLabels(){const sagittal=MRI_SERIES[current].plane==='strzałkowa',offset=Number($('labelOffset').value);$('vertebraLabels').classList.toggle('hidden',!sagittal||!$('showLabels').checked);$('labelOffset').disabled=!sagittal;$('vertebraLabelGroup').setAttribute('transform',`translate(0 ${offset})`);$('labelOffsetValue').textContent=(offset>0?'+':'')+offset}
+function reset2d(){controls.forEach(id=>$(id).value=100);$('structure').value=70;$('labelOffset').value=0;$('invert').checked=false;panX=panY=0;renderFilters();updateLabels()}
+function showMode(mode){$('viewer2d').style.display=mode==='2d'?'grid':'none';$('viewer3d').style.display=mode==='3d'?'block':'none';$('viewerVolume').style.display=mode==='volume'?'block':'none';$('controls2d').classList.toggle('hidden',mode!=='2d');$('controls3d').classList.toggle('hidden',mode!=='3d');$('controlsVolume').classList.toggle('hidden',mode!=='volume');for(const [id,value] of [['tab2d','2d'],['tab3d','3d'],['tabVolume','volume']])$(id).classList.toggle('active',mode===value);window.dispatchEvent(new Event('mri-mode-'+mode))}
+const sagittalSeries=MRI_SERIES.find(item=>item.number===401);function updatePreview(){const index=Number($('previewSlice').value)-1;$('sagittalPreview').src=sagittalSeries.files[index];$('previewNumber').textContent=`warstwa ${index+1}/${sagittalSeries.count}`}
+$('previewSlice').addEventListener('input',updatePreview);$('showScanInset').addEventListener('change',event=>$('scanInset').classList.toggle('hidden',!event.target.checked));updatePreview();
+$('openPreview2d').addEventListener('click',()=>{const index=MRI_SERIES.indexOf(sagittalSeries);$('series').value=index;renderSeries(index);$('slice').value=Number($('previewSlice').value)-1;renderImage();$('zoom').value=180;renderFilters();showMode('2d')});
+MRI_SERIES.forEach((item,index)=>{const option=document.createElement('option');option.value=index;option.textContent=`${item.number} · ${item.description} (${item.count})`;$('series').append(option)});
+$('series').addEventListener('change',e=>renderSeries(e.target.value));$('slice').addEventListener('input',renderImage);controls.forEach(id=>$(id).addEventListener('input',renderFilters));$('structure').addEventListener('input',renderFilters);$('showLabels').addEventListener('change',updateLabels);$('labelOffset').addEventListener('input',updateLabels);$('invert').addEventListener('change',renderFilters);$('reset2d').addEventListener('click',reset2d);$('tab2d').addEventListener('click',()=>showMode('2d'));$('tab3d').addEventListener('click',()=>showMode('3d'));$('tabVolume').addEventListener('click',()=>showMode('volume'));
+document.addEventListener('keydown',e=>{if(!['ArrowLeft','ArrowRight'].includes(e.key)||$('viewer2d').style.display==='none')return;const next=Number($('slice').value)+(e.key==='ArrowRight'?1:-1);$('slice').value=Math.max(0,Math.min(Number($('slice').max),next));renderImage()});
+stage.addEventListener('wheel',e=>{e.preventDefault();$('zoom').value=Math.max(50,Math.min(800,Number($('zoom').value)-Math.sign(e.deltaY)*20));renderFilters()},{passive:false});
+stage.addEventListener('pointerdown',e=>{drag={x:e.clientX,y:e.clientY,panX,panY};stage.setPointerCapture(e.pointerId);stage.classList.add('dragging')});stage.addEventListener('pointermove',e=>{if(!drag)return;panX=drag.panX+e.clientX-drag.x;panY=drag.panY+e.clientY-drag.y;if(!moveFrame)moveFrame=requestAnimationFrame(()=>{moveFrame=0;renderFilters()})});stage.addEventListener('pointerup',()=>{drag=null;stage.classList.remove('dragging')});stage.addEventListener('pointercancel',()=>{drag=null;stage.classList.remove('dragging')});stage.addEventListener('dblclick',reset2d);
+const AUTH_KEY='mri_cervical_auth',AUTH_PASS='GRZYB';
+function isAuthed(){return sessionStorage.getItem(AUTH_KEY)==='1'}
+function unlockApp(){$('authGate')?.classList.add('hidden');$('appMain')?.classList.remove('locked');window.dispatchEvent(new Event('mri-unlocked'))}
+function lockApp(){sessionStorage.removeItem(AUTH_KEY);location.reload()}
+$('lockBtn')?.addEventListener('click',lockApp);
+function startApp(){renderSeries(0);const initTab=new URLSearchParams(location.search).get('tab')||location.hash.replace('#','')||'2d';if(initTab==='volume'||initTab==='3d')showMode(initTab)}
+const qPass=new URLSearchParams(location.search).get('pass');if(qPass&&qPass.trim().toUpperCase()===AUTH_PASS)sessionStorage.setItem(AUTH_KEY,'1');
+if(isAuthed()){unlockApp();startApp()}else{const form=$('authForm'),input=$('authPassword'),err=$('authError');if(form){form.addEventListener('submit',e=>{e.preventDefault();if(input.value.trim().toUpperCase()===AUTH_PASS){sessionStorage.setItem(AUTH_KEY,'1');unlockApp();startApp()}else{input.classList.add('error');err.classList.remove('hidden');input.value='';input.focus();setTimeout(()=>input.classList.remove('error'),400)}})}}
+</script>
+<script type="module" id="old-volume-renderer">
+import * as THREE from 'three';import{OrbitControls}from'./vendor/OrbitControls.js';try{
+const canvas=document.getElementById('volumeOld'),host=document.getElementById('viewerVolume'),renderer=new THREE.WebGLRenderer({canvas,antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setClearColor(0x030508,1);
+const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(35,1,.1,20);camera.position.set(0,0,2.2);const orbit=new OrbitControls(camera,canvas);orbit.enableDamping=true;orbit.dampingFactor=.07;orbit.enableRotate=false;orbit.minDistance=.55;orbit.maxDistance=5;orbit.mouseButtons.LEFT=THREE.MOUSE.ROTATE;orbit.mouseButtons.MIDDLE=THREE.MOUSE.DOLLY;orbit.mouseButtons.RIGHT=THREE.MOUSE.PAN;orbit.touches.ONE=THREE.TOUCH.ROTATE;orbit.touches.TWO=THREE.TOUCH.DOLLY_PAN;
+const spacing=MRI_VOLUME.spacing,size=[MRI_VOLUME.width*spacing[0],MRI_VOLUME.height*spacing[1],(MRI_VOLUME.depth-1)*spacing[2]],largest=Math.max(...size),boxSize=new THREE.Vector3(size[0]/largest,size[1]/largest,size[2]/largest);
+const uniforms={uData:{value:null},uEdges:{value:null},uContours:{value:null},uShowContours:{value:1},uCamera:{value:new THREE.Vector3()},uBox:{value:boxSize},uThreshold:{value:.18},uDensity:{value:1},uStructure:{value:1.4},uCrop:{value:.45},uIsolate:{value:1}};
+const material=new THREE.RawShaderMaterial({glslVersion:THREE.GLSL3,side:THREE.BackSide,transparent:true,depthWrite:false,uniforms,vertexShader:`in vec3 position;uniform mat4 modelViewMatrix;uniform mat4 projectionMatrix;out vec3 vPosition;void main(){vPosition=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,fragmentShader:`precision highp float;precision highp sampler3D;uniform sampler3D uData;uniform sampler3D uEdges;uniform sampler3D uContours;uniform float uShowContours;uniform vec3 uCamera;uniform vec3 uBox;uniform float uThreshold;uniform float uDensity;uniform float uStructure;uniform float uCrop;uniform float uIsolate;in vec3 vPosition;out vec4 outColor;vec2 hitBox(vec3 o,vec3 d){vec3 inv=1./d;vec3 lo=(-uBox*.5-o)*inv,hi=(uBox*.5-o)*inv,n=min(lo,hi),f=max(lo,hi);return vec2(max(max(n.x,n.y),n.z),min(min(f.x,f.y),f.z));}void main(){vec3 ray=normalize(vPosition-uCamera);vec2 b=hitBox(uCamera,ray);if(b.x>b.y)discard;float start=max(b.x,0.),len=b.y-start;vec3 p=uCamera+ray*start,stepRay=ray*len/127.;vec4 result=vec4(0.);float boneOutline=0.,discOutline=0.;for(int i=0;i<128;i++){vec3 uv=p/uBox+.5;float value=texture(uData,uv).r;float edge=texture(uEdges,uv).r;float contour=texture(uContours,uv).r;float radius=length((uv.xy-vec2(.58,.64))/vec2(.26,.48));float roi=1.-smoothstep(uCrop,uCrop+.05,radius);float mask=mix(1.,roi,uIsolate);boneOutline=max(boneOutline,step(.25,contour)*(1.-step(.75,contour))*mask);discOutline=max(discOutline,step(.75,contour)*mask);float bright=smoothstep(uThreshold,min(uThreshold+.12,1.),value)*uDensity*.024;float structure=smoothstep(.20,.75,edge)*uStructure*.022;float alpha=(bright+structure)*mask;vec3 color=mix(vec3(.82,.63,.39),vec3(.49,.76,.85),smoothstep(.18,.70,edge));result.rgb+=(1.-result.a)*alpha*color;result.a+=(1.-result.a)*alpha;if(result.a>.97)break;p+=stepRay;}result.rgb=mix(result.rgb,vec3(.46,.81,.91),boneOutline*.46*uShowContours);result.rgb=mix(result.rgb,vec3(.93,1.,1.),discOutline*.68*uShowContours);result.a=max(result.a,max(boneOutline*.55,discOutline*.7)*uShowContours);outColor=result;}`});
+const mesh=new THREE.Mesh(new THREE.BoxGeometry(...boxSize.toArray()),material);scene.add(mesh);
+const series=MRI_SERIES.find(item=>item.number===401),textures=[],loader=new THREE.TextureLoader();let volumeLoaded=false;function sliceTexture(index){if(!textures[index]){textures[index]=loader.load(series.files[index]);textures[index].colorSpace=THREE.SRGBColorSpace}return textures[index]}
+const plane=new THREE.Mesh(new THREE.PlaneGeometry(size[0]/largest,size[1]/largest),new THREE.MeshBasicMaterial({map:sliceTexture(9),side:THREE.DoubleSide}));scene.add(plane);mesh.visible=false;
+const outline=new THREE.LineSegments(new THREE.EdgesGeometry(mesh.geometry),new THREE.LineBasicMaterial({color:0x64748b,transparent:true,opacity:.36}));scene.add(outline);
+const volumeMeshGroup=new THREE.Group();scene.add(volumeMeshGroup);
+const uniformModelIntensity={value:.80};
+const uniformMeshOpacity={value:.15};
+const createVolumeOutlineMaterial=color=>new THREE.ShaderMaterial({
+  uniforms:{color:{value:new THREE.Color(color)},uCrop:uniforms.uCrop,uIsolate:uniforms.uIsolate,uBox:uniforms.uBox,uIntensity:uniformModelIntensity},
+  vertexShader:`varying vec3 vNormal;varying vec3 vView;varying vec3 vPos;void main(){vPos=position;vec4 view=modelViewMatrix*vec4(position,1.);vNormal=normalize(normalMatrix*normal);vView=normalize(-view.xyz);gl_Position=projectionMatrix*view;}`,
+  fragmentShader:`uniform vec3 color;uniform float uCrop;uniform float uIsolate;uniform vec3 uBox;uniform float uIntensity;varying vec3 vNormal;varying vec3 vView;varying vec3 vPos;void main(){if(uIntensity<=.001)discard;vec3 uv=vPos/uBox+.5;float radius=length((uv.xy-vec2(.58,.64))/vec2(.26,.48));float roi=1.-smoothstep(uCrop,uCrop+.05,radius);float mask=mix(1.,roi,uIsolate);if(mask<.05)discard;float ndotv=abs(dot(normalize(vNormal),normalize(vView)));float edge=1.-smoothstep(.10,.35,ndotv);float alpha=edge*mask*.95*uIntensity;if(alpha<.01)discard;gl_FragColor=vec4(color,alpha);}`,
+  side:THREE.DoubleSide,transparent:true,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1
+});
+const volumeOutlineMaterials={bone:createVolumeOutlineMaterial(0x79c6d5),disc:createVolumeOutlineMaterial(0xe1fdff)};
+const createVolumeFillMaterial=(color,baseAlpha)=>new THREE.ShaderMaterial({
+  uniforms:{color:{value:new THREE.Color(color)},uCrop:uniforms.uCrop,uIsolate:uniforms.uIsolate,uBox:uniforms.uBox,uOpacity:uniformMeshOpacity,uIntensity:uniformModelIntensity},
+  vertexShader:`varying vec3 vPos;void main(){vPos=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,
+  fragmentShader:`uniform vec3 color;uniform float uCrop;uniform float uIsolate;uniform vec3 uBox;uniform float uOpacity;uniform float uIntensity;varying vec3 vPos;void main(){if(uIntensity<=.001)discard;vec3 uv=vPos/uBox+.5;float radius=length((uv.xy-vec2(.58,.64))/vec2(.26,.48));float roi=1.-smoothstep(uCrop,uCrop+.05,radius);float mask=mix(1.,roi,uIsolate);float alpha=uOpacity*${baseAlpha}*mask*uIntensity;if(alpha<.004)discard;gl_FragColor=vec4(color,alpha);}`,
+  side:THREE.DoubleSide,transparent:true,depthWrite:false
+});
+const volumeFillMaterials={bone:createVolumeFillMaterial(0xf1e4c8,1.0),disc:createVolumeFillMaterial(0x39d9ea,1.3)};
+let volumeMeshesLoaded=false;
+async function loadVolumeMeshes(){
+  if(volumeMeshesLoaded)return;
+  volumeMeshesLoaded=true;
+  try{
+    const res=await fetch('spine_meshes_detail.json');
+    if(!res.ok)return;
+    const data=await res.json();
+    const worldToVolume=new THREE.Matrix4().set(
+      0.0, -0.00455336, 0.0, -0.06077291,
+      -0.00023105, 0.0, -0.00454749, 0.28091646,
+      -0.0045396, 0.0, 0.00023065, 0.19797291,
+      0.0, 0.0, 0.0, 1.0
+    );
+    for(const item of data){
+      if(item.kind!=='bone'&&item.kind!=='disc')continue;
+      const geometry=new THREE.BufferGeometry();
+      geometry.setAttribute('position',new THREE.Float32BufferAttribute(item.vertices,3));
+      geometry.setIndex(item.indices);
+      geometry.applyMatrix4(worldToVolume);
+      geometry.computeVertexNormals();
+      const fillMesh=new THREE.Mesh(geometry,volumeFillMaterials[item.kind]);
+      fillMesh.renderOrder=2;
+      volumeMeshGroup.add(fillMesh);
+      const outlineMesh=new THREE.Mesh(geometry,volumeOutlineMaterials[item.kind]);
+      outlineMesh.renderOrder=3;
+      volumeMeshGroup.add(outlineMesh);
+    }
+    updateVolumeOutlines();
+  }catch(err){console.error('Błąd wczytywania siatek 3D:',err);}
+}
+function updateVolumeOutlines(){
+  const show=document.getElementById('showVolumeOutlines').checked&&!document.getElementById('showMriPlane').checked&&(uniformModelIntensity.value>0.001);
+  volumeMeshGroup.visible=show;
+  uniforms.uShowContours.value=0;
+}
+function updateSlice(){const index=Number(document.getElementById('volumeSlice').value)-1;plane.material.map=sliceTexture(index);plane.material.needsUpdate=true;plane.position.z=(index/(series.count-1)-.5)*size[2]/largest;document.getElementById('volumeSliceValue').textContent=`${index+1} z ${series.count}`}
+function showPlane(){const visible=document.getElementById('showMriPlane').checked;plane.visible=visible;outline.visible=visible;mesh.visible=!visible;document.getElementById('volumeRenderingControls').classList.toggle('hidden',visible);document.getElementById('volumeSlice').disabled=!visible;document.getElementById('loadingVolume').classList.toggle('hidden',visible||!!uniforms.uData.value);updateVolumeOutlines();if(!visible&&sessionStorage.getItem('mri_cervical_auth')==='1')loadVolume()}
+document.getElementById('volumeSlice').addEventListener('input',updateSlice);document.getElementById('showMriPlane').addEventListener('change',showPlane);updateSlice();showPlane();
+function resize(){const w=host.clientWidth,h=host.clientHeight;if(!w||!h)return;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix()}function setView(view){const positions={side:[.08,.14,.72],front:[2.2,0,0],top:[0,2.2,0]};camera.position.fromArray(positions[view]||positions.side);camera.up.set(view==='side'?1:0,view==='front'?1:0,view==='top'?-1:0);orbit.target.set(view==='side'?.08:0,view==='side'?.14:0,0);orbit.update()}function resetVolume(){setView('side');orbit.autoRotate=false;uniforms.uThreshold.value=.18;uniforms.uDensity.value=1;uniforms.uStructure.value=1.4;uniforms.uCrop.value=.45;uniforms.uIsolate.value=1;for(const [id,value] of Object.entries({threshold:18,density:100,bone:140,crop:45})){document.getElementById(id).value=value;document.getElementById(id+'Value').textContent=value+'%'}document.getElementById('isolateSpine').checked=true;document.getElementById('volumeAutoRotate').checked=false;document.getElementById('showVolumeOutlines').checked=true;document.getElementById('volumeModelIntensity').value=80;document.getElementById('volumeModelIntensityValue').textContent='80%';uniformModelIntensity.value=.80;document.getElementById('volumeMeshOpacity').value=15;document.getElementById('volumeMeshOpacityValue').textContent='15%';uniformMeshOpacity.value=.15;updateVolumeOutlines()}
+setView('side');
+let dragBall=null;
+function ballPoint(event){const rect=canvas.getBoundingClientRect(),radius=Math.min(rect.width,rect.height)/2,x=(event.clientX-rect.left-rect.width/2)/radius,y=(rect.top+rect.height/2-event.clientY)/radius,r=x*x+y*y;return r>1?new THREE.Vector3(x,y,0).normalize():new THREE.Vector3(x,y,Math.sqrt(1-r))}
+canvas.addEventListener('pointerdown',event=>{if(event.button!==0)return;dragBall=ballPoint(event);canvas.setPointerCapture(event.pointerId)});
+canvas.addEventListener('pointermove',event=>{if(!dragBall)return;const next=ballPoint(event),qCamera=new THREE.Quaternion().setFromUnitVectors(next,dragBall),rotation=camera.quaternion.clone().multiply(qCamera).multiply(camera.quaternion.clone().invert());camera.position.sub(orbit.target).applyQuaternion(rotation).add(orbit.target);camera.up.applyQuaternion(rotation);camera.lookAt(orbit.target);dragBall=next});
+for(const name of ['pointerup','pointercancel'])canvas.addEventListener(name,()=>dragBall=null);
+document.querySelectorAll('[data-volume-view]').forEach(button=>button.addEventListener('click',()=>setView(button.dataset.volumeView)));document.getElementById('volumeAutoRotate').addEventListener('change',e=>orbit.autoRotate=e.target.checked);document.getElementById('threshold').addEventListener('input',e=>{uniforms.uThreshold.value=e.target.value/100;document.getElementById('thresholdValue').textContent=e.target.value+'%'});document.getElementById('density').addEventListener('input',e=>{uniforms.uDensity.value=e.target.value/100;document.getElementById('densityValue').textContent=e.target.value+'%'});document.getElementById('bone').addEventListener('input',e=>{uniforms.uStructure.value=e.target.value/100;document.getElementById('boneValue').textContent=e.target.value+'%'});document.getElementById('crop').addEventListener('input',e=>{uniforms.uCrop.value=e.target.value/100;document.getElementById('cropValue').textContent=e.target.value+'%'});document.getElementById('isolateSpine').addEventListener('change',e=>uniforms.uIsolate.value=e.target.checked?1:0);document.getElementById('showVolumeOutlines').addEventListener('change',updateVolumeOutlines);document.getElementById('volumeModelIntensity').addEventListener('input',e=>{const val=Number(e.target.value);uniformModelIntensity.value=val/100;document.getElementById('volumeModelIntensityValue').textContent=val+'%';updateVolumeOutlines();});const qIntensity=new URLSearchParams(location.search).get('intensity');if(qIntensity!==null){const v=Math.max(0,Math.min(100,Number(qIntensity)));document.getElementById('volumeModelIntensity').value=v;document.getElementById('volumeModelIntensityValue').textContent=v+'%';uniformModelIntensity.value=v/100;}document.getElementById('volumeMeshOpacity').addEventListener('input',e=>{uniformMeshOpacity.value=e.target.value/100;document.getElementById('volumeMeshOpacityValue').textContent=e.target.value+'%';});document.getElementById('resetVolume').addEventListener('click',resetVolume);window.addEventListener('resize',resize);window.addEventListener('mri-mode-volume',()=>{resize();renderer.setAnimationLoop(animate)});for(const mode of ['2d','3d'])window.addEventListener('mri-mode-'+mode,()=>renderer.setAnimationLoop(null));window.addEventListener('beforeunload',()=>{renderer.setAnimationLoop(null);renderer.dispose()});if(host.style.display==='block'){resize();renderer.setAnimationLoop(animate)}
+window.addEventListener('mri-unlocked',()=>{if(host.style.display==='block'){resize();renderer.setAnimationLoop(animate)}if(!document.getElementById('showMriPlane').checked)loadVolume()});
+function makeTexture(buffer){const texture=new THREE.Data3DTexture(new Uint8Array(buffer),MRI_VOLUME.width,MRI_VOLUME.height,MRI_VOLUME.depth);texture.format=THREE.RedFormat;texture.type=THREE.UnsignedByteType;texture.minFilter=THREE.LinearFilter;texture.magFilter=THREE.LinearFilter;texture.unpackAlignment=1;texture.needsUpdate=true;return texture}function loadVolume(){if(sessionStorage.getItem('mri_cervical_auth')!=='1'||volumeLoaded)return;volumeLoaded=true;loadVolumeMeshes();const files=[MRI_VOLUME.file,MRI_VOLUME.edgeFile,MRI_VOLUME.contourFile||"volume_contours.raw"];Promise.all(files.map(file=>fetch(file).then(r=>{if(!r.ok)throw Error();return r.arrayBuffer()}))).then(([volume,edges,contours])=>{uniforms.uData.value=makeTexture(volume);uniforms.uEdges.value=makeTexture(edges);uniforms.uContours.value=makeTexture(contours);document.getElementById('loadingVolume').classList.add('hidden')}).catch(()=>document.getElementById('loadingVolume').textContent='Nie udało się wczytać danych 3D.')}
+function animate(){orbit.update();mesh.worldToLocal(uniforms.uCamera.value.copy(camera.position));renderer.render(scene,camera)}
+}catch(error){document.getElementById('volumeOld').style.display='none';document.getElementById('loadingVolume').textContent='Nie udało się uruchomić podglądu 3D.';console.error(error)}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import {OrbitControls} from './vendor/OrbitControls.js';
+
+const canvas=document.getElementById('volume'),host=document.getElementById('viewer3d'),loading=document.getElementById('loading3d');
+const renderer=new THREE.WebGLRenderer({canvas,antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setClearColor(0x030508);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1;
+const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(34,1,.1,20),model=new THREE.Group();scene.add(model);
+scene.add(new THREE.HemisphereLight(0xe7f5ff,0x17202b,1.2));const key=new THREE.DirectionalLight(0xffffff,2.2);key.position.set(3,4,5);scene.add(key);const rim=new THREE.DirectionalLight(0x67e8f9,.9);rim.position.set(-4,1,-3);scene.add(rim);
+const orbit=new OrbitControls(camera,canvas);orbit.enableDamping=true;orbit.dampingFactor=.075;orbit.rotateSpeed=.8;orbit.zoomSpeed=1.1;orbit.panSpeed=.8;orbit.minDistance=1.25;orbit.maxDistance=6;orbit.mouseButtons.LEFT=THREE.MOUSE.ROTATE;orbit.mouseButtons.MIDDLE=THREE.MOUSE.DOLLY;orbit.mouseButtons.RIGHT=THREE.MOUSE.PAN;orbit.touches.ONE=THREE.TOUCH.ROTATE;orbit.touches.TWO=THREE.TOUCH.DOLLY_PAN;
+const materials={bone:new THREE.MeshStandardMaterial({color:0xf1e4c8,roughness:.58,metalness:.04}),disc:new THREE.MeshStandardMaterial({color:0x39d9ea,roughness:.45,transparent:true,opacity:.92}),cord:new THREE.MeshStandardMaterial({color:0xef5b67,roughness:.5,transparent:true,opacity:.72}),canal:new THREE.MeshStandardMaterial({color:0x7897ff,roughness:.5,transparent:true,opacity:.16,depthWrite:false,side:THREE.DoubleSide}),root:new THREE.MeshStandardMaterial({color:0xffd36e,roughness:.55,transparent:true,opacity:.9})};
+const outlineMaterial=color=>new THREE.ShaderMaterial({uniforms:{color:{value:new THREE.Color(color)}},vertexShader:'varying vec3 vNormal;varying vec3 vView;void main(){vec4 view=modelViewMatrix*vec4(position,1.);vNormal=normalize(normalMatrix*normal);vView=normalize(-view.xyz);gl_Position=projectionMatrix*view;}',fragmentShader:'uniform vec3 color;varying vec3 vNormal;varying vec3 vView;void main(){float alpha=1.-smoothstep(.12,.33,abs(dot(normalize(vNormal),normalize(vView))));if(alpha<.02)discard;gl_FragColor=vec4(color,alpha);}',side:THREE.DoubleSide,transparent:true,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1});
+const outlineMaterials={bone:outlineMaterial(0x79c6d5),disc:outlineMaterial(0xe1fdff)};
+const meshes=[],labels=[],outlines=[];let loadedVariant='',loadGeneration=0;
+function orient(array){for(let i=0;i<array.length;i+=3){const y=array[i+1],z=array[i+2];array[i+1]=z;array[i+2]=-y}return array}
+function addRootSchematics(data){const cord=data.find(item=>item.kind==='cord');if(!cord)return;const points=cord.vertices;for(const disc of data.filter(item=>item.kind==='disc')){const z=disc.center[2];let count=0,x=0,y=0;for(let i=0;i<points.length;i+=3)if(Math.abs(points[i+2]-z)<2){x+=points[i];y+=points[i+1];count++}if(!count)continue;x/=count;y/=count;for(const side of [-1,1]){const route=[[x+side*3,y,z+1],[x+side*6,y+.5,z+1],[x+side*10,y+2,z],[x+side*14,y+4,z-1.5]].map(point=>new THREE.Vector3(...orient(point)));const geometry=new THREE.TubeGeometry(new THREE.CatmullRomCurve3(route),20,.55,6,false);const mesh=new THREE.Mesh(geometry,materials.root);mesh.userData.kind='root';mesh.visible=document.getElementById('showRoots').checked;model.add(mesh);meshes.push(mesh)}}}
+function setView(view='side'){orbit.enableDamping=false;orbit.update();const positions={side:[3,0,0],front:[0,0,3],top:[0,3,0]};camera.position.fromArray(positions[view]);camera.up.set(0,view==='top'?0:1,view==='top'?-1:0);orbit.target.set(0,0,0);orbit.update();orbit.enableDamping=true}
+function resize(){const w=host.clientWidth,h=host.clientHeight;if(!w||!h)return;const quality=Number(document.getElementById('renderQuality').value);renderer.setPixelRatio(Math.min(devicePixelRatio*quality,Math.sqrt(8000000/(w*h))));renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix()}
+async function loadModel(){if(sessionStorage.getItem('mri_cervical_auth')!=='1')return;const variant=document.getElementById('meshVariant').value;if(loadedVariant===variant)return;const generation=++loadGeneration;loading.textContent='Ładowanie modelu 3D…';loading.classList.remove('hidden');try{const response=await fetch(variant==='detail'?'spine_meshes_detail.json':'spine_meshes_smooth.json');if(!response.ok)throw Error(response.status);const data=await response.json();if(generation!==loadGeneration)return;for(const mesh of meshes)mesh.geometry.dispose();model.clear();model.position.set(0,0,0);model.scale.setScalar(1);meshes.length=0;labels.length=0;outlines.length=0;document.getElementById('labels3d').replaceChildren();for(const item of data){const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.Float32BufferAttribute(orient(item.vertices.slice()),3));geometry.setIndex(item.indices);geometry.computeVertexNormals();const mesh=new THREE.Mesh(geometry,materials[item.kind]);mesh.userData.kind=item.kind;mesh.visible=document.getElementById(({bone:'showBones',disc:'showDiscs',cord:'showCord',canal:'showCanal'})[item.kind]).checked;if(outlineMaterials[item.kind]){const outline=new THREE.Mesh(geometry,outlineMaterials[item.kind]);outline.renderOrder=2;outline.visible=document.getElementById('showOutlines').checked;mesh.add(outline);outlines.push(outline)}model.add(mesh);meshes.push(mesh);if(item.kind==='bone'){const label=document.createElement('span');label.className='mesh-label';label.textContent=item.name;document.getElementById('labels3d').append(label);const c=orient(item.center.slice());labels.push({element:label,point:new THREE.Vector3(...c)})}}
+if(variant==='detail')addRootSchematics(data);const box=new THREE.Box3().setFromObject(model),center=box.getCenter(new THREE.Vector3()),scale=1.75/box.getSize(new THREE.Vector3()).length();model.scale.setScalar(scale);model.position.copy(center).multiplyScalar(-scale);setView();loadedVariant=variant;document.getElementById('showCanal').disabled=variant==='smooth';document.getElementById('showRoots').disabled=variant==='smooth';if(variant==='smooth'){document.getElementById('showCanal').checked=false;document.getElementById('showRoots').checked=false}loading.classList.add('hidden')}catch(error){loading.textContent='Nie udało się wczytać segmentacji 3D.';console.error(error)}}
+function updateLabels(){const visible=document.getElementById('show3dLabels').checked&&document.getElementById('showBones').checked;for(const label of labels){label.element.classList.toggle('hidden',!visible);if(!visible)continue;const p=model.localToWorld(label.point.clone()).project(camera);label.element.style.left=(p.x*.5+.5)*host.clientWidth+'px';label.element.style.top=(-p.y*.5+.5)*host.clientHeight+'px';label.element.style.opacity=p.z<1?'1':'0'}}
+function animate(){orbit.update();updateLabels();renderer.render(scene,camera)}
+function show(kind,visible){meshes.filter(mesh=>mesh.userData.kind===kind).forEach(mesh=>mesh.visible=visible)}
+document.querySelectorAll('[data-view]').forEach(button=>button.addEventListener('click',()=>setView(button.dataset.view)));
+document.getElementById('autoRotate').addEventListener('change',event=>orbit.autoRotate=event.target.checked);
+document.getElementById('showBones').addEventListener('change',event=>show('bone',event.target.checked));
+document.getElementById('showDiscs').addEventListener('change',event=>show('disc',event.target.checked));
+document.getElementById('showOutlines').addEventListener('change',event=>outlines.forEach(outline=>outline.visible=event.target.checked));
+document.getElementById('showCord').addEventListener('change',event=>show('cord',event.target.checked));
+document.getElementById('showCanal').addEventListener('change',event=>show('canal',event.target.checked));
+document.getElementById('showRoots').addEventListener('change',event=>show('root',event.target.checked));
+document.getElementById('meshVariant').addEventListener('change',loadModel);
+document.getElementById('renderQuality').addEventListener('change',resize);
+document.getElementById('meshOpacity').addEventListener('input',event=>{materials.bone.transparent=event.target.value<100;materials.bone.opacity=event.target.value/100;document.getElementById('meshOpacityValue').textContent=event.target.value+'%'});
+document.getElementById('reset3d').addEventListener('click',()=>{setView();orbit.autoRotate=false;document.getElementById('autoRotate').checked=false});
+window.addEventListener('resize',resize);window.addEventListener('mri-mode-3d',()=>{resize();loadModel();renderer.setAnimationLoop(animate)});for(const mode of ['2d','volume'])window.addEventListener('mri-mode-'+mode,()=>renderer.setAnimationLoop(null));if(host.style.display==='block'){resize();loadModel();renderer.setAnimationLoop(animate)}
+window.addEventListener('mri-unlocked',()=>{if(host.style.display==='block'){resize();loadModel();renderer.setAnimationLoop(animate)}});
+</script></body></html>
